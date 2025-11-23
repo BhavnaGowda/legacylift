@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LegacyLift — COBOL → Python Modernizer</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      font-family: "Inter", Arial, sans-serif;
+      color: #0b1220;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg,#0f66ff,#33b5ff);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin-top: 2px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    textarea {
+      width: 100%;
+      height: 260px;
+      border: 1px solid #d6dce5;
+      border-radius: 12px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 14px;
+      background: #fbfdff;
+    }
+
+    button {
+      padding: 12px 18px;
+      background: #0d5bff;
+      border: none;
+      color: white;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .output {
+      background: #0b1220;
+      color: #dbeafe;
+      padding: 14px;
+      height: 180px;
+      border-radius: 12px;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+
+    .explain {
+      margin-top: 10px;
+      padding: 14px;
+      background: #f8fafc;
+      border-radius: 12px;
+      color: #1e293b;
+      font-size: 14px;
+      min-height: 60px;
+    }
+
+    #root {
+      width: 100%;
+      height: 380px;
+      border-radius: 12px;
+      border: 1px solid #dbe1ea;
+      overflow: hidden;
+      background: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">LL</div>
+    <div>
+      <h1>LegacyLift</h1>
+      <div class="subtitle">COBOL → Python Modernizer</div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT SIDE -->
+    <div class="card">
+      <h3>Paste Your COBOL Code</h3>
+
+      <textarea id="cobolInput">
+IDENTIFICATION DIVISION.
+PROGRAM-ID. HELLO.
+PROCEDURE DIVISION.
+    DISPLAY "HELLO WORLD".
+    STOP RUN.
+      </textarea>
+
+      <button id="convertBtn">Convert to Python</button>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="card">
+      <h3>Python Output</h3>
+      <div id="pythonOutput" class="output">Waiting for conversion...</div>
+      <div id="explanation" class="explain">Explanation will appear here.</div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="card">
+    <h3>Live Agent</h3>
+    <div id="root"></div>
+  </div>
+
+</div>
+
+<!-- 🔥 WATSONX EMBED CODE (LIVE VERSION) -->
+<script>
+  window.wxOConfiguration = {
+    orchestrationID: "b5cdc509b14c453c89ff80e638b6f51a_ecfe9db3-8723-405f-9646-2f622768bec7",
+    hostURL: "https://jp-tok.watson-orchestrate.cloud.ibm.com",
+    rootElementID: "root",
+    deploymentPlatform: "ibmcloud",
+    crn: "crn:v1:bluemix:public:watsonx-orchestrate:jp-tok:a/b5cdc509b14c453c89ff80e638b6f51a:ecfe9db3-8723-405f-9646-2f622768bec7::",
+    chatOptions: {
+      agentId: "512e5644-aed0-4a0f-aaaf-d69a2b4aefd1",
+      agentEnvironmentId: "9c626924-d3ce-4e35-aa3f-9cdc9b93ac97"
+    }
+  };
+
+  setTimeout(function () {
+    const script = document.createElement('script');
+    script.src = "https://jp-tok.watson-orchestrate.cloud.ibm.com/wxochat/wxoLoader.js?embed=true";
+    script.onload = function () {
+      try { wxoLoader.init(); } catch (e) { console.error(e); }
+    };
+    document.head.appendChild(script);
+  }, 0);
+</script>
+
+<!-- 🔥 SEND COBOL INTO CHAT -->
+<script>
+document.getElementById("convertBtn").addEventListener("click", async () => {
+  const cobol = document.getElementById("cobolInput").value.trim();
+
+  try {
+    if (window.wxoLoader?.sendMessage) {
+      wxoLoader.sendMessage(cobol);
+    } else {
+      throw new Error();
+    }
+  } catch (e) {
+    await navigator.clipboard.writeText(cobol);
+    alert("COBOL copied. Paste it into the chat manually.");
+  }
+});
+
+const waitForChat = setInterval(() => {
+  try {
+    const chat = wxoLoader.chat;
+    if (!chat) return;
+
+    chat.onMessage((msg) => {
+      const text = msg?.text || msg?.message || "";
+      if (!text) return;
+
+      if (text.includes("print(") || text.includes("def") || text.includes("import ")) {
+        document.getElementById("pythonOutput").textContent = text;
+      } else {
+        document.getElementById("explanation").textContent = text;
+      }
+    });
+
+    clearInterval(waitForChat);
+  } catch (e) {}
+}, 1000);
+</script>
+
+</body>
+</html>
